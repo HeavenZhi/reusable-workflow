@@ -1,0 +1,90 @@
+# 自定义的 Github Workflow 名
+name: Push Mirror Git Repository
+
+# 自定义 Github Workflow 的触发条件
+on:
+  # 设置 GitHub Workflow 调用触发
+  workflow_call:
+
+    # 设置传入的普通参数
+    inputs:
+      source_repo:
+        description: 'This is the address of the source repository to mirror from (current Github repository is recommended).'
+        required: true
+        type: string
+
+      destination_repo:
+        description: 'This is the goal of image warehouse address (support using `|` multiple Git repository address space, can be synchronous push).'
+        required: true
+        type: string
+
+    # 设置传入的机密参数
+    secrets:
+      ssh_private_key:
+        description: 'This is the private key used to Pull and Push the Git repository over SSH.'
+        required: true
+
+jobs:
+  # 自定义的 job 名
+  push-mirror-git-repository:
+    # 指定运行环境
+    runs-on: ubuntu-latest
+
+    steps:
+      # 设置 SSH 的私钥
+      - name: configure SSH Private Key
+        env:
+          # 读取 Github Settings 的 Secrets and variables 中的 Repository secrets 储存的 Repository secrets
+          ssh_private_key: ${{ secrets.ssh_private_key }}
+        run: |
+          # 设置 SSH 私钥文件，方便下一步向其他 Git 仓库推送时使用
+
+          # 创建文件目录
+          mkdir -p ~/.ssh
+
+          # 创建 SSH 私钥文件
+          echo "$ssh_private_key" > ~/.ssh/id_rsa
+
+          # 修改 SSH 私钥文件的权限（只有本人能读写）
+          chmod 600 ~/.ssh/id_rsa
+
+          # 将这句话追加到 ~/.ssh/config 文件末尾
+          echo "StrictHostKeyChecking no" >> ~/.ssh/config
+      
+      # 推送镜像
+      - name: Push mirror to other Git Repository
+        env:
+          # 读取 Github Settings 的 Secrets and variables 中的 Repository secrets 储存的 Repository variables
+          source_repo: ${{ inputs.source_repo }}
+          destination_repo: ${{ inputs.destination_repo }}
+        run: |
+          # 克隆完整的 Git 镜像仓库到本地(当前环境的虚拟机)，并将镜像推送至指定的其他 Git 仓库
+          
+          # 克隆完整的 Git 镜像仓库到本地(当前环境的虚拟机)
+          git clone --mirror "$source_repo"
+
+          # 进入镜像 Git 仓库
+          cd `basename "$source_repo"`
+
+          # 将Git其他 Git 仓库地址，根据分隔符'|'分割成数组
+          destination_repo_LIST=(${destination_repo//|/ })
+
+          # 循环向其他 Git 仓库推送
+          for value in ${destination_repo_LIST[@]}
+          do
+          # 修改远程 Git 仓库地址
+          git remote set-url --push origin "$value"
+          # 向远程 Git 仓库推送镜像
+          git push --mirror
+          done
+
+      # 删除操作文件
+      - name: Delete operation file
+        run: |
+          # 清理手动设置和下载的文件
+
+          # 退出待删除文件目录
+          cd ../
+
+          # 强制删除文件
+          rm -f ~/.ssh/id_rsa ~/.ssh/config `basename "$source_repo"`
