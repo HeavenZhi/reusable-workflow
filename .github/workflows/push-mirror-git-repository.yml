@@ -1,0 +1,128 @@
+# 自定义的 Github Workflow 名
+name: Push Mirror Git Repository
+
+# 自定义 Github Workflow 的触发条件
+on:
+  # 设置 GitHub Workflow 调用触发
+  workflow_call:
+
+    # 设置传入的普通参数
+    inputs:
+      #################### 必填参数 ####################
+      # 源仓库地址
+      source_repo:
+        description: 'This is the address of the source repository to mirror from (current Github repository is recommended).'
+        required: true
+        type: string
+      
+      # 目标仓库地址集(使用 '|' 分隔)
+      destination_repo:
+        description: 'This is the goal of image warehouse address (support using `|` multiple Git repository address space, can be synchronous push).'
+        required: true
+        type: string
+      
+      #################### 可选参数 ####################
+      # 是否使用 clone --bare
+      is_clone_bare:
+        description: 'This is the setting for Git to clone the source repository. false means clone the source repository in clone --mirror mode and true means clone the source repository in clone --bare mode.'
+        required: false
+        type: boolean
+
+      # 是否使用强制推送
+      is_push_force:
+        description: 'This is the setting that specifies whether Git is pushed by Force, false means push in normal mode (no force), true means push with Force (force push is risky!! Overwrite raw data from other Git repositories).'
+        required: false
+        type: boolean
+
+    # 设置传入的机密参数
+    secrets:
+      ssh_private_key:
+        description: 'This is the private key used to Pull and Push the Git repository over SSH.'
+        required: true
+
+jobs:
+  # 自定义的 job 名
+  push-mirror-git-repository:
+    # 指定运行环境
+    runs-on: ubuntu-latest
+
+    steps:
+      # 设置 SSH 的私钥
+      - name: Configure SSH Private Key
+        env:
+          # 读取 Github Settings 的 Secrets and variables 中的 Repository secrets 储存的 Repository secrets
+          ssh_private_key: ${{ secrets.ssh_private_key }}
+        run: |
+          # 设置 SSH 私钥文件，方便下一步向其他 Git 仓库推送时使用
+
+          # 创建文件目录
+          mkdir -p ~/.ssh
+
+          # 创建 SSH 私钥文件
+          echo "${ssh_private_key}" > ~/.ssh/id_rsa
+
+          # 修改 SSH 私钥文件的权限（只有本人能读写）
+          chmod 600 ~/.ssh/id_rsa
+
+          # 将这句话追加到 ~/.ssh/config 文件末尾
+          echo "StrictHostKeyChecking no" >> ~/.ssh/config
+
+      # 推送镜像
+      - name: Push mirror to other Git Repository
+        env:
+          # 读取 Github Settings 的 Secrets and variables 中的 Repository secrets 储存的 Repository variables
+          source_repo: ${{ inputs.source_repo }}
+          destination_repo: ${{ inputs.destination_repo }}
+          # 可选参数，若没有设置则默认值：false
+          is_clone_bare: ${{ inputs.is_clone_bare }}
+          is_push_force: ${{ inputs.is_push_force }}
+        run: |
+          # 克隆完整的 Git 镜像仓库到本地(当前环境的虚拟机)，并将镜像推送至指定的其他 Git 仓库
+
+          # 用于储存 clone 方式的参数
+          clone_way="--mirror"
+          # 判断是否使用 clone --bare 源仓库
+          if [ ${is_clone_bare} == "true" ]; then
+            clone_way="--bare"
+          fi
+          # echo "读取可选参数 is_clone_bare，克隆时将使用：git clone ${clone_way} ${source_repo}"
+
+          # 克隆完整的 Git 镜像仓库到本地(当前环境的虚拟机)
+          #   若使用 "git clone --mirror" 的话会完整 clone 整个仓库，此时若 clone 的 Git 仓库有 Pull Requests，目标代码托管平台有可能会无法识别源代码托管平台的 Pull Requests 创建的引用，进而认为该引用是非法引用，禁止向其 Git 仓库中推送镜像。
+          #   为了避免出现其他代码托管平台(目前已知: Gitee、Codeup、Coding)无法识别特殊引用问题
+          #   阿里云的大佬给出的解决办法：此处应该使用 "git clone --bare"
+          git clone ${clone_way} ${source_repo}
+
+          # 进入镜像 Git 仓库
+          cd `basename ${source_repo}`
+
+          # 将Git其他 Git 仓库地址，根据分隔符'|'分割成数组
+          destination_repo_LIST=(${destination_repo//|/ })
+
+          # 用于储存 push 方式的参数
+          push_way="--no-force"
+          # 判断是否使用 push --force 目标仓库
+          if [ ${is_push_force} == "true" ]; then
+            push_way="--force"
+          fi
+          # echo "读取可选参数 is_push_force，推送时将使用：git push --mirror ${push_way}"
+
+          # 循环向其他 Git 仓库推送
+          for value in ${destination_repo_LIST[@]}
+          do
+          # 修改远程 Git 仓库地址
+          git remote set-url --push origin ${value}
+          # 向远程 Git 仓库推送镜像
+          git push --mirror ${push_way}
+          done
+
+      # 删除操作文件
+      - name: Delete operation file
+        run: |
+          # 清理手动设置和下载的文件
+
+          # 退出待删除文件目录
+          cd ../
+
+          # 强制删除文件
+          rm -f ~/.ssh/id_rsa ~/.ssh/config `basename ${source_repo}`
