@@ -1,0 +1,19 @@
+# 自定义的 Github Workflow 名
+name: Local push mirror Git Repository
+
+# 自定义 Github Workflow 的触发条件
+on: [ push, delete, create ]
+
+jobs:
+  # 自定义的 job 名
+  call-push-mirror-git-repository:
+
+    # --------------------------------------在此以上的代码可以根据需求任意更改--------------------------------------
+    # -----------------------------在此之后的代码为：调用该 GitHub Workflow 的核心步骤（不能更改）-----------------------------
+
+    uses: HeavenZhi/reusable-workflow/.github/workflows/push-mirror-git-repository.yml@main
+    with:
+      source_repo: ${{ vars.SOURCE_REPO }}
+      destination_repo: ${{ vars.DESTINATION_REPO }}
+    secrets:
+      ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY }}
