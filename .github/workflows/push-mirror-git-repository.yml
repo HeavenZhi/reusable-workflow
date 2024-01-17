@@ -18,6 +18,11 @@ on:
         required: true
         type: string
 
+      is_force:
+        description: 'This is the setting that specifies whether Git is pushed by Force, false means push in normal mode (no force), true means push with Force (force push is risky!! Overwrite raw data from other Git repositories).'
+        required: false
+        type: boolean
+
     # 设置传入的机密参数
     secrets:
       ssh_private_key:
@@ -43,39 +48,50 @@ jobs:
           mkdir -p ~/.ssh
 
           # 创建 SSH 私钥文件
-          echo "$ssh_private_key" > ~/.ssh/id_rsa
+          echo "${ssh_private_key}" > ~/.ssh/id_rsa
 
           # 修改 SSH 私钥文件的权限（只有本人能读写）
           chmod 600 ~/.ssh/id_rsa
 
           # 将这句话追加到 ~/.ssh/config 文件末尾
           echo "StrictHostKeyChecking no" >> ~/.ssh/config
-      
+
       # 推送镜像
       - name: Push mirror to other Git Repository
         env:
           # 读取 Github Settings 的 Secrets and variables 中的 Repository secrets 储存的 Repository variables
           source_repo: ${{ inputs.source_repo }}
           destination_repo: ${{ inputs.destination_repo }}
+          # 读取 force 的可选参数，若没有设置则默认值：false
+          is_force: ${{ inputs.is_force }}
         run: |
           # 克隆完整的 Git 镜像仓库到本地(当前环境的虚拟机)，并将镜像推送至指定的其他 Git 仓库
-          
+
           # 克隆完整的 Git 镜像仓库到本地(当前环境的虚拟机)
-          git clone --mirror "$source_repo"
+          git clone --mirror "${source_repo}"
 
           # 进入镜像 Git 仓库
-          cd `basename "$source_repo"`
+          cd `basename "${source_repo}"`
 
           # 将Git其他 Git 仓库地址，根据分隔符'|'分割成数组
           destination_repo_LIST=(${destination_repo//|/ })
+
+          # 用于储存 '--force' 的输出
+          push_force=""
+          # 判断是否需要强制推送
+          if [ ${is_force} ]; then
+            push_force="--force"
+          else
+            push_force=""
+          fi
 
           # 循环向其他 Git 仓库推送
           for value in ${destination_repo_LIST[@]}
           do
           # 修改远程 Git 仓库地址
-          git remote set-url --push origin "$value"
+          git remote set-url --push origin "${value}"
           # 向远程 Git 仓库推送镜像
-          git push --mirror
+          git push "${push_force}" --mirror
           done
 
       # 删除操作文件
@@ -87,4 +103,4 @@ jobs:
           cd ../
 
           # 强制删除文件
-          rm -f ~/.ssh/id_rsa ~/.ssh/config `basename "$source_repo"`
+          rm -f ~/.ssh/id_rsa ~/.ssh/config `basename "${source_repo}"`
