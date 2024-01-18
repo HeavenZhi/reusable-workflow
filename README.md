@@ -73,7 +73,7 @@ jobs:
 
 #### 使用可选参数: is_force 时
 
-当使用可选参数: `is_force`强制覆盖`gitlab.com`、`jihu.com`、`gitcode.net`、`gitlink.org.cn`等代码托管平台的 **Git 仓库**时，可能会出现如下报错：
+当**源 Git 仓库**使用可选参数 `is_force` 向`gitlab.com`、`jihu.com`、`gitcode.net`、`gitlink.org.cn`等代码托管平台的 **Git 仓库**强制推送时，可能会出现如下报错：
 
 ```shell
 remote: GitLab: You are not allowed to force push code to a protected branch on this project.
@@ -83,7 +83,7 @@ error: failed to push some refs to 'gitlab.com:HeavenZhi/test.git'
 Error: Process completed with exit code 1.
 ```
 
-出现这个报错的原因是有些代码托管平台的 **Git 仓库**会对默认的主分支进行 **force** 保护，要解决这个问题也很简单，允许对 **Git 仓库**的默认主分支进行 **force 推送**即可。
+出现这个报错的原因是有些代码托管平台的 **Git 仓库**会对默认的主分支进行**禁用 --force** 的保护，要解决这个问题也很简单，允许对 **Git 仓库**的默认主分支进行 **force 推送**即可。
 
 ##### GitLab、Jihu
 
@@ -93,12 +93,18 @@ Error: Process completed with exit code 1.
 
 ##### GitCode
 
-在`gitcode.net`的 **Git 仓库**创建与源仓库的主分支相同名字的分支：
+要在`gitcode.net`的 **Git 仓库**中使用`-- force`推送镜像的话，操作会稍微复杂一点，需要进行三步设置。
 
-![]()
+1.在`gitcode.net`的 **Git 仓库**中新建与源仓库的主分支相同名字的分支：
 
-允许`gitcode.net`的 **Git 仓库**对默认主分支进行 **force 推送**：
+![GitCode_added_main_branch]()
 
-![GitCode_config_force](image/GitCode_config_force.png)
+2.在`gitcode.net`的 **Git 仓库**中切换默认主分支：
+
+![GitCode_switch_default_branch]()
+
+3.删除`gitcode.net`的 **Git 仓库**中对`master`分支的保护：
+
+![GitCode_move_protection](image/GitCode_move_protection.png)
 
 ##### GitLink

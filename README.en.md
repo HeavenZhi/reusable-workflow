@@ -6,7 +6,18 @@
 
 ## Push Mirror Git Repository
 
-This is a **GitHub Workflow** to fully mirror a single **Git Repository** and push that image to other **Git Repository** in bulk.
+This is a **GitHub Workflow** to fully mirror a single **Git Repository** and push that mirror to other **Git Repository** in bulk.
+
+After practical testing this **GitHub Workflow** can push an mirror to the following code hosting platform's **Git Repository** :
+
+- `gitlab.com`
+- `bitbucket.org`
+- `gitee.com`
+- `jihulab.com`
+- `codeup.aliyun.com`
+- `coding.net`
+- `gitcode.net`
+- `gitlink.org.cn`
 
 ### How to use
 
@@ -57,3 +68,37 @@ Optional: Parameters that can be left unset
 - `is_force`: An optional parameter of the `boolean` type, the default value is `false`.
   - This parameter determines whether to push an mirror to **Target Git Repository** by **force**.
   - !!Forced push is risky and **will overwrite the raw data of Target Git Repository**!!
+
+### 注意事项
+
+#### When the optional parameter: is_force is used
+
+When the **Source Git Repository** uses the optional parameter `is_force` to push the **Git Repository** of the code hosting platform such as `gitlab.com`, `jihu.com`, `gitcode.net`, `gitlink.org.cn`, the following error may occur:
+
+```shell
+remote: GitLab: You are not allowed to force push code to a protected branch on this project.
+To gitlab.com:HeavenZhi/test.git
+ ! [remote rejected] main -> main (pre-receive hook declined)
+error: failed to push some refs to 'gitlab.com:HeavenZhi/test.git'
+Error: Process completed with exit code 1.
+```
+
+The reason for this error is that some code hosting platforms's **Git Repository** will **disable  --force** protection for the default master branch, to solve this problem is also very simple, allow **force push** for the default master branch of **Git Repository**.
+
+##### GitLab、Jihu
+
+Allow the **Git Repository** on platforms like `gitlab.com` and `jihu.com` to **force push** the default master branch:
+
+![GitLab_config_force](image/GitLab_config_force.png)
+
+##### GitCode
+
+在`gitcode.net`的 **Git 仓库**创建与源仓库的主分支相同名字的分支：
+
+![]()
+
+允许`gitcode.net`的 **Git 仓库**对默认主分支进行 **force 推送**：
+
+![GitCode_config_force](image/GitCode_config_force.png)
+
+##### GitLink
