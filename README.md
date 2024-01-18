@@ -8,6 +8,17 @@
 
 这是一个用于完全镜像单个 **Git Repository**，并将这个镜像批量推送到其他 **Git Repository** 平台的 **GitHub Workflow**。
 
+经过实际测试该 **GitHub Workflow** 可向下列代码托管平台的 **Git Repository** 推送镜像：
+
+- `gitlab.com`
+- `bitbucket.org`
+- `gitee.com`
+- `jihulab.com`
+- `codeup.aliyun.com`
+- `coding.net`
+- `gitcode.net`
+- `gitlink.org.cn`
+
 ### 如何使用
 
 使用方法粗略总括为三步：
@@ -57,3 +68,37 @@ jobs:
 - `is_force`: `boolean`类型的可选参数，默认为：`false`。
   - 该参数决定是否使用 **force** 的方式，向**目标 Git 仓库**推送镜像。
   - ！！！强制推送具有**高风险性**，会**强制覆盖目标 Git 仓库**的原数据！！！
+
+### 注意事项
+
+#### 使用可选参数: is_force 时
+
+当使用可选参数: `is_force`强制覆盖`gitlab.com`、`jihu.com`、`gitcode.net`、`gitlink.org.cn`等代码托管平台的 **Git 仓库**时，可能会出现如下报错：
+
+```shell
+remote: GitLab: You are not allowed to force push code to a protected branch on this project.
+To gitlab.com:HeavenZhi/test.git
+ ! [remote rejected] main -> main (pre-receive hook declined)
+error: failed to push some refs to 'gitlab.com:HeavenZhi/test.git'
+Error: Process completed with exit code 1.
+```
+
+出现这个报错的原因是有些代码托管平台的 **Git 仓库**会对默认的主分支进行 **force** 保护，要解决这个问题也很简单，允许对 **Git 仓库**的默认主分支进行 **force 推送**即可。
+
+##### GitLab、Jihu
+
+允许`gitlab.com`、`jihu.com`等平台的 **Git 仓库**对默认主分支进行 **force 推送**：
+
+![GitLab_config_force](image/GitLab_config_force.png)
+
+##### GitCode
+
+在`gitcode.net`的 **Git 仓库**创建与源仓库的主分支相同名字的分支：
+
+![]()
+
+允许`gitcode.net`的 **Git 仓库**对默认主分支进行 **force 推送**：
+
+![GitCode_config_force](image/GitCode_config_force.png)
+
+##### GitLink
