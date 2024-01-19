@@ -73,9 +73,12 @@ jobs:
 
 #### 使用可选参数: is_force 时
 
-当**源 Git 仓库**使用可选参数 `is_force` 向`gitlab.com`、`jihu.com`、`gitcode.net`、`gitlink.org.cn`等代码托管平台的 **Git 仓库**强制推送时，可能会出现如下报错：
+当**源 Git 仓库**使用可选参数 `is_force` 向`gitlab.com`、`jihu.com`、`gitcode.net`、`gitlink.org.cn`等代码托管平台的 **目标 Git 仓库**强制推送时，可能会出现报错的情况，下面列出了常见报错的处理方式。
+
+##### GitLab、Jihu
 
 ```shell
+Warning: Permanently added 'gitlab.com' (ED25519) to the list of known hosts.
 remote: GitLab: You are not allowed to force push code to a protected branch on this project.
 To gitlab.com:HeavenZhi/test.git
  ! [remote rejected] main -> main (pre-receive hook declined)
@@ -83,28 +86,56 @@ error: failed to push some refs to 'gitlab.com:HeavenZhi/test.git'
 Error: Process completed with exit code 1.
 ```
 
-出现这个报错的原因是有些代码托管平台的 **Git 仓库**会对默认的主分支进行**禁用 --force** 的保护，要解决这个问题也很简单，允许对 **Git 仓库**的默认主分支进行 **force 推送**即可。
+出现这个报错的原因是`gitlab.com`、`jihu.com`等平台的 **Git 仓库**禁止对默认分支进行`--force`推送。
 
-##### GitLab、Jihu
+要解决这个问题也很简单，允许`gitlab.com`、`jihu.com`等平台的 **Git 仓库**对默认分支进行 **force 推送**即可：
 
-允许`gitlab.com`、`jihu.com`等平台的 **Git 仓库**对默认主分支进行 **force 推送**：
-
-![GitLab_config_force](image/GitLab_config_force.png)
+![GitLab_config_force](image/GitLab_config_force.gif)
 
 ##### GitCode
 
-要在`gitcode.net`的 **Git 仓库**中使用`-- force`推送镜像的话，操作会稍微复杂一点，需要进行三步设置。
+```shell
+Warning: Permanently added 'gitcode.net' (RSA) to the list of known hosts.
+remote: GitLab: The default branch of a project cannot be deleted.
+To gitcode.net:Heaven__Zhi/test.git
+ ! [remote rejected] master (pre-receive hook declined)
+ ! [remote rejected] main -> main (pre-receive hook declined)
+error: failed to push some refs to 'gitcode.net:Heaven__Zhi/test.git'
+Error: Process completed with exit code 1.
+```
 
-1.在`gitcode.net`的 **Git 仓库**中新建与源仓库的主分支相同名字的分支：
+出现这个报错的原因是：
 
-![GitCode_added_main_branch]()
+1. **源 Git 仓库**的默认分支与`gitcode.net`等平台的 **目标 Git 仓库**的默认分支不同
+2. `gitcode.net`等平台的 **Git 仓库**不允许删除默认分支
 
-2.在`gitcode.net`的 **Git 仓库**中切换默认主分支：
+要使用`-- force`向`gitcode.net`的 **Git 仓库**中推送镜像的话，操作会稍微复杂一点，需要进行三步设置。
 
-![GitCode_switch_default_branch]()
-
-3.删除`gitcode.net`的 **Git 仓库**中对`master`分支的保护：
-
-![GitCode_move_protection](image/GitCode_move_protection.png)
+1. 在`gitcode.net`的 **Git 仓库**中新建与**源 Git 仓库**的默认分支相同名字的分支：
+   ![GitCode_added_main_branch](image/GitCode_added_main_branch.gif)
+2. 在`gitcode.net`的 **Git 仓库**中将默认分支设置为上一步新建的分支：
+   ![GitCode_switch_default_branch](image/GitCode_switch_default_branch.gif)
+3. 撤销`gitcode.net`的 **Git 仓库**中对`master`分支的保护：
+   ![GitCode_move_protection](image/GitCode_move_protection.gif)
 
 ##### GitLink
+
+```shell
+Warning: Permanently added 'code.gitlink.org.cn' (ED25519) to the list of known hosts.
+remote: 
+remote: Gitea: branch master is the default branch and cannot be deleted        
+To code.gitlink.org.cn:HeavenZhi/test.git
+ ! [remote rejected] master (pre-receive hook declined)
+ ! [remote rejected] main -> main (pre-receive hook declined)
+error: failed to push some refs to 'code.gitlink.org.cn:HeavenZhi/test.git'
+Error: Process completed with exit code 1.
+```
+
+出现这个报错的原因是：
+
+1. **源 Git 仓库**的默认分支与`gitlink.org.cn`等平台的 **目标 Git 仓库**的默认分支不同
+2. `gitlink.org.cn`等平台的 **Git 仓库**不允许删除默认分支
+
+在`gitlink.org.cn`的 **Git 仓库**中新建与**源 Git 仓库**的默认分支相同名字的分支，并将新建的分支设置为默认分支：
+
+![GitLink_switch_default_branch](image/GitLink_switch_default_branch.gif)

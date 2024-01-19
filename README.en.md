@@ -69,13 +69,16 @@ Optional: Parameters that can be left unset
   - This parameter determines whether to push an mirror to **Target Git Repository** by **force**.
   - !!Forced push is risky and **will overwrite the raw data of Target Git Repository**!!
 
-### 注意事项
+### notice
 
 #### When the optional parameter: is_force is used
 
-When the **Source Git Repository** uses the optional parameter `is_force` to push the **Git Repository** of the code hosting platform such as `gitlab.com`, `jihu.com`, `gitcode.net`, `gitlink.org.cn`, the following error may occur:
+When the **Source Git Repository** uses the optional parameter `is_force` to push the **Target Git Repository** of the code hosting platform such as `gitlab.com`, `jihu.com`, `gitcode.net`, `gitlink.org.cn`, Errors may occur. The following is a list of common error handling methods.
+
+##### GitLab、Jihu
 
 ```shell
+Warning: Permanently added 'gitlab.com' (ED25519) to the list of known hosts.
 remote: GitLab: You are not allowed to force push code to a protected branch on this project.
 To gitlab.com:HeavenZhi/test.git
  ! [remote rejected] main -> main (pre-receive hook declined)
@@ -83,22 +86,56 @@ error: failed to push some refs to 'gitlab.com:HeavenZhi/test.git'
 Error: Process completed with exit code 1.
 ```
 
-The reason for this error is that some code hosting platforms's **Git Repository** will **disable  --force** protection for the default master branch, to solve this problem is also very simple, allow **force push** for the default master branch of **Git Repository**.
+The reason for this error is that **Git Repository** on platforms such as `gitlab.com`, `jihu.com`, etc. prohibit `--force` push to the default branch.
 
-##### GitLab、Jihu
+To solve this problem is also very simple, allow the **Git Repository** of platforms such as `gitlab.com`and `jihu.com` to **force push** against the default branch:
 
-Allow the **Git Repository** on platforms like `gitlab.com` and `jihu.com` to **force push** the default master branch:
-
-![GitLab_config_force](image/GitLab_config_force.png)
+![GitLab_config_force](image/GitLab_config_force.gif)
 
 ##### GitCode
 
-在`gitcode.net`的 **Git 仓库**创建与源仓库的主分支相同名字的分支：
+```shell
+Warning: Permanently added 'gitcode.net' (RSA) to the list of known hosts.
+remote: GitLab: The default branch of a project cannot be deleted.
+To gitcode.net:Heaven__Zhi/test.git
+ ! [remote rejected] master (pre-receive hook declined)
+ ! [remote rejected] main -> main (pre-receive hook declined)
+error: failed to push some refs to 'gitcode.net:Heaven__Zhi/test.git'
+Error: Process completed with exit code 1.
+```
 
-![]()
+The reason for this error is:
 
-允许`gitcode.net`的 **Git 仓库**对默认主分支进行 **force 推送**：
+1. The default branch of the **Source Git Repository** is different from the default branch of the **Target Git Repository** of the `gitcode.net` platform.
+2. **Git Repository** for platforms such as `gitcode.net` do not allow the default branch to be deleted.
 
-![GitCode_config_force](image/GitCode_config_force.png)
+To push an mirror to `gitcode.net`'s **Git Repository** using `--force` is a bit more complicated and requires a three-step setup.
+
+1. In the **Git Repository** of `gitcode.net` create a branch with the same name as the default branch of the **Source Git Repository**:
+   ![GitCode_added_main_branch](image/GitCode_added_main_branch.gif)
+2. In `gitcode.net`'s **Git Repository**, set the default branch to the one you created in the previous step:
+   ![GitCode_switch_default_branch](image/GitCode_switch_default_branch.gif)
+3. Unprotect the `master` branch in `gitcode.net`'s **Git Repository**:
+   ![GitCode_move_protection](image/GitCode_move_protection.gif)
 
 ##### GitLink
+
+```shell
+Warning: Permanently added 'code.gitlink.org.cn' (ED25519) to the list of known hosts.
+remote: 
+remote: Gitea: branch master is the default branch and cannot be deleted        
+To code.gitlink.org.cn:HeavenZhi/test.git
+ ! [remote rejected] master (pre-receive hook declined)
+ ! [remote rejected] main -> main (pre-receive hook declined)
+error: failed to push some refs to 'code.gitlink.org.cn:HeavenZhi/test.git'
+Error: Process completed with exit code 1.
+```
+
+The reason for this error is:
+
+1. The default branch of the **Source Git Repository** is different from the default branch of the **Target Git Repository** of the `gitlink.org.cn` platform.
+2. **Git Repository** for platforms such as `gitlink.org.cn` do not allow the default branch to be deleted.
+
+In the **Git Repository** of `gitlink.org.cn` create a branch with the same name as the default branch of the **Source Git Repository**, and set the new branch as the default branch:
+
+![GitLink_switch_default_branch](image/GitLink_switch_default_branch.gif)
