@@ -8,16 +8,21 @@ on:
 
     # 设置传入的普通参数
     inputs:
+      #################### 必填参数 ####################
+      # 源仓库地址
       source_repo:
         description: 'This is the address of the source repository to mirror from (current Github repository is recommended).'
         required: true
         type: string
-
+      
+      # 目标仓库地址集(使用 '|' 分隔)
       destination_repo:
         description: 'This is the goal of image warehouse address (support using `|` multiple Git repository address space, can be synchronous push).'
         required: true
         type: string
-
+      
+      #################### 可选参数 ####################
+      # 是否使用强制推送
       is_force:
         description: 'This is the setting that specifies whether Git is pushed by Force, false means push in normal mode (no force), true means push with Force (force push is risky!! Overwrite raw data from other Git repositories).'
         required: false
@@ -37,7 +42,7 @@ jobs:
 
     steps:
       # 设置 SSH 的私钥
-      - name: configure SSH Private Key
+      - name: Configure SSH Private Key
         env:
           # 读取 Github Settings 的 Secrets and variables 中的 Repository secrets 储存的 Repository secrets
           ssh_private_key: ${{ secrets.ssh_private_key }}
