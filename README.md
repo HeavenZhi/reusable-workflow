@@ -90,7 +90,7 @@ Error: Process completed with exit code 1.
 
 要解决这个问题也很简单，允许`gitlab.com`、`jihu.com`等平台的 **Git 仓库**对默认分支进行 **force 推送**即可：
 
-![GitLab_config_force](https://cdn.jsdelivr.net/gh/HeavenZhi/reusable-workflow@dev/image/GitLab_config_force.gif)
+![GitLab_config_force](https://cdn.jsdelivr.net/gh/HeavenZhi/reusable-workflow@main/image/GitLab_config_force.gif)
 
 ##### GitCode
 
@@ -112,11 +112,11 @@ Error: Process completed with exit code 1.
 要使用`-- force`向`gitcode.net`的 **Git 仓库**中推送镜像的话，操作会稍微复杂一点，需要进行三步设置。
 
 1. 在`gitcode.net`的 **Git 仓库**中新建与**源 Git 仓库**的默认分支相同名字的分支：
-   ![GitCode_added_main_branch](https://cdn.jsdelivr.net/gh/HeavenZhi/reusable-workflow@dev/image/GitCode_added_main_branch.gif)
+   ![GitCode_added_main_branch](https://cdn.jsdelivr.net/gh/HeavenZhi/reusable-workflow@main/image/GitCode_added_main_branch.gif)
 2. 在`gitcode.net`的 **Git 仓库**中将默认分支设置为上一步新建的分支：
-   ![GitCode_switch_default_branch](https://cdn.jsdelivr.net/gh/HeavenZhi/reusable-workflow@dev/image/GitCode_switch_default_branch.gif)
+   ![GitCode_switch_default_branch](https://cdn.jsdelivr.net/gh/HeavenZhi/reusable-workflow@main/image/GitCode_switch_default_branch.gif)
 3. 撤销`gitcode.net`的 **Git 仓库**中对`master`分支的保护：
-   ![GitCode_move_protection](https://cdn.jsdelivr.net/gh/HeavenZhi/reusable-workflow@dev/image/GitCode_move_protection.gif)
+   ![GitCode_move_protection](https://cdn.jsdelivr.net/gh/HeavenZhi/reusable-workflow@main/image/GitCode_move_protection.gif)
 
 ##### GitLink
 
@@ -138,4 +138,4 @@ Error: Process completed with exit code 1.
 
 在`gitlink.org.cn`的 **Git 仓库**中新建与**源 Git 仓库**的默认分支相同名字的分支，并将新建的分支设置为默认分支：
 
-![GitLink_switch_default_branch](https://cdn.jsdelivr.net/gh/HeavenZhi/reusable-workflow@dev/image/GitLink_switch_default_branch.gif)
+![GitLink_switch_default_branch](https://cdn.jsdelivr.net/gh/HeavenZhi/reusable-workflow@main/image/GitLink_switch_default_branch.gif)

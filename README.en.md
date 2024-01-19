@@ -90,7 +90,7 @@ The reason for this error is that **Git Repository** on platforms such as `gitla
 
 To solve this problem is also very simple, allow the **Git Repository** of platforms such as `gitlab.com`and `jihu.com` to **force push** against the default branch:
 
-![GitLab_config_force](https://cdn.jsdelivr.net/gh/HeavenZhi/reusable-workflow@dev/image/GitLab_config_force.gif)
+![GitLab_config_force](https://cdn.jsdelivr.net/gh/HeavenZhi/reusable-workflow@main/image/GitLab_config_force.gif)
 
 ##### GitCode
 
@@ -112,11 +112,11 @@ The reason for this error is:
 To push an mirror to `gitcode.net`'s **Git Repository** using `--force` is a bit more complicated and requires a three-step setup.
 
 1. In the **Git Repository** of `gitcode.net` create a branch with the same name as the default branch of the **Source Git Repository**:
-   ![GitCode_added_main_branch](https://cdn.jsdelivr.net/gh/HeavenZhi/reusable-workflow@dev/image/GitCode_added_main_branch.gif)
+   ![GitCode_added_main_branch](https://cdn.jsdelivr.net/gh/HeavenZhi/reusable-workflow@main/image/GitCode_added_main_branch.gif)
 2. In `gitcode.net`'s **Git Repository**, set the default branch to the one you created in the previous step:
-   ![GitCode_switch_default_branch](https://cdn.jsdelivr.net/gh/HeavenZhi/reusable-workflow@dev/image/GitCode_switch_default_branch.gif)
+   ![GitCode_switch_default_branch](https://cdn.jsdelivr.net/gh/HeavenZhi/reusable-workflow@main/image/GitCode_switch_default_branch.gif)
 3. Unprotect the `master` branch in `gitcode.net`'s **Git Repository**:
-   ![GitCode_move_protection](https://cdn.jsdelivr.net/gh/HeavenZhi/reusable-workflow@dev/image/GitCode_move_protection.gif)
+   ![GitCode_move_protection](https://cdn.jsdelivr.net/gh/HeavenZhi/reusable-workflow@main/image/GitCode_move_protection.gif)
 
 ##### GitLink
 
@@ -138,4 +138,4 @@ The reason for this error is:
 
 In the **Git Repository** of `gitlink.org.cn` create a branch with the same name as the default branch of the **Source Git Repository**, and set the new branch as the default branch:
 
-![GitLink_switch_default_branch](https://cdn.jsdelivr.net/gh/HeavenZhi/reusable-workflow@dev/image/GitLink_switch_default_branch.gif)
+![GitLink_switch_default_branch](https://cdn.jsdelivr.net/gh/HeavenZhi/reusable-workflow@main/image/GitLink_switch_default_branch.gif)
