@@ -6,7 +6,7 @@
 
 ## Push Mirror Git Repository
 
-这是一个用于完全镜像单个 **Git Repository**，并将这个镜像批量推送到其他 **Git Repository** 平台的 **GitHub Workflow**。
+这是一个用于完全镜像单个 **Git Repository**，并将这个镜像批量推送到其他 **Git Repository** 的 **GitHub Workflow**。
 
 经过实际测试该 **GitHub Workflow** 可向下列代码托管平台的 **Git Repository** 推送镜像：
 
@@ -23,12 +23,12 @@
 
 使用方法粗略总括为三步：
 
-1. 在您的**GitHub's Git Repository**的**Setting**中的**Secrets and variables**里新增三项：
-   1. 在**Repository secrets**中新增：`SSH_PRIVATE_KEY`，其值为**SSH的私钥**，它需要具有对**Git Repository**进行**pull**和**push**操作的权限
-   2. 在**Repository variables**中新增：`SOURCE_REPO`，其值为**源 Git 仓库地址**(最好使用**SSH**的**Git**仓库地址)
-   3. 在**Repository variables**中新增：`DESTINATION_REPO`，其值为**目标 Git 仓库地址**(最好使用**SSH**的**Git**仓库地址)，**多个地址**可以使用`|`分隔
-2. 在您需要进行镜像同步的**GitHub's Git Repository**的根目录中新增目录：`.github/workflows`，并在目录中创建文件后缀名为`.yml`或`.yaml`的文件
-3. 在上一步创建的文件中调用本**GitHub Workflow**，以下为调用示例：
+1. 在您的 **GitHub's Git Repository** 的 **Setting** 中的 **Secrets and variables** 里新增三项：
+   1. 在 **Repository secrets** 中新增：`SSH_PRIVATE_KEY`，其值为 **SSH的私钥**，它需要具有对 **Git Repository** 进行 **pull** 和 **push** 操作的权限
+   2. 在 **Repository variables** 中新增：`SOURCE_REPO`，其值为**源 Git 仓库地址**(最好使用 **SSH** 的 **Git** 仓库地址)
+   3. 在 **Repository variables** 中新增：`DESTINATION_REPO`，其值为**目标 Git 仓库地址**(最好使用 **SSH** 的 **Git** 仓库地址)，**多个地址**可以使用`|`分隔
+2. 在您需要进行镜像同步的 **GitHub's Git Repository** 的根目录中新增目录：`.github/workflows`，并在目录中创建文件后缀名为`.yml`或`.yaml`的文件
+3. 在上一步创建的文件中调用本 **GitHub Workflow**，以下为调用示例：
 
 ```yml
 # .github/workflows/your-file-name.yml
@@ -73,7 +73,7 @@ jobs:
 
 #### 使用可选参数: is_force 时
 
-当**源 Git 仓库**使用可选参数 `is_force` 向`gitlab.com`、`jihu.com`、`gitcode.net`、`gitlink.org.cn`等代码托管平台的 **目标 Git 仓库**强制推送时，可能会出现报错的情况，下面列出了常见报错的处理方式。
+当**源 Git 仓库**使用可选参数 `is_force` 向`gitlab.com`、`jihu.com`、`gitcode.net`、`gitlink.org.cn`等代码托管平台的**目标 Git 仓库**强制推送时，可能会出现报错的情况，下面列出了常见报错的处理方式。
 
 ##### GitLab、Jihu
 
@@ -106,7 +106,7 @@ Error: Process completed with exit code 1.
 
 出现这个报错的原因是：
 
-1. **源 Git 仓库**的默认分支与`gitcode.net`等平台的 **目标 Git 仓库**的默认分支不同
+1. **源 Git 仓库**的默认分支与`gitcode.net`等平台的**目标 Git 仓库**的默认分支不同
 2. `gitcode.net`等平台的 **Git 仓库**不允许删除默认分支
 
 要使用`-- force`向`gitcode.net`的 **Git 仓库**中推送镜像的话，操作会稍微复杂一点，需要进行三步设置。
@@ -133,7 +133,7 @@ Error: Process completed with exit code 1.
 
 出现这个报错的原因是：
 
-1. **源 Git 仓库**的默认分支与`gitlink.org.cn`等平台的 **目标 Git 仓库**的默认分支不同
+1. **源 Git 仓库**的默认分支与`gitlink.org.cn`等平台的**目标 Git 仓库**的默认分支不同
 2. `gitlink.org.cn`等平台的 **Git 仓库**不允许删除默认分支
 
 在`gitlink.org.cn`的 **Git 仓库**中新建与**源 Git 仓库**的默认分支相同名字的分支，并将新建的分支设置为默认分支：
