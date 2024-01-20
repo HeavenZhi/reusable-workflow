@@ -10,14 +10,17 @@ This is a **GitHub Workflow** to fully mirror a single **Git Repository** and pu
 
 After practical testing this **GitHub Workflow** can push an mirror to the following code hosting platform's **Git Repository** :
 
-- `gitlab.com`
-- `bitbucket.org`
-- `gitee.com`
-- `jihulab.com`
-- `codeup.aliyun.com`
-- `coding.net`
-- `gitcode.net`
-- `gitlink.org.cn`
+- [GitHub](https://github.com/)
+- [GitLab](https://gitlab.com/)
+- [Bitbucket](https://bitbucket.org/)
+- [Gitee](https://gitee.com/)[1]
+- [Codeup](https://codeup.aliyun.com/)[1]
+- [Coding](https://coding.net/)[1]
+- [JihuLab](https://jihulab.com/)
+- [GitCode](https://gitcode.net/)
+- [GitLink](https://www.gitlink.org.cn/)
+
+[1]: When **Pull Requests** exist in **GitHub's Git Repository**, the code hosting platform prohibits users from pushing mirror to their repository (we are consulting with the relevant platform staff for a workaround).
 
 ### How to use
 
@@ -91,6 +94,65 @@ The reason for this error is that **Git Repository** on platforms such as `gitla
 To solve this problem is also very simple, allow the **Git Repository** of platforms such as `gitlab.com`and `jihu.com` to **force push** against the default branch:
 
 ![GitLab_config_force](https://cdn.jsdelivr.net/gh/HeavenZhi/reusable-workflow@main/image/GitLab_config_force.gif)
+
+##### Gitee、Codeup、Coding（暂时无解）
+
+```shell
+Warning: Permanently added 'gitee.com' (ED25519) to the list of known hosts.
+remote: Powered by GITEE.COM [GNK-6.4]        
+To gitee.com:HeavenZhi/test.git
+   c8ded6b..3db261c  main -> main
+ ! [remote rejected] refs/pull/1/head -> refs/pull/1/head (deny updating a hidden ref)
+ ! [remote rejected] refs/pull/1/merge -> refs/pull/1/merge (deny updating a hidden ref)
+error: failed to push some refs to 'gitee.com:HeavenZhi/test.git'
+Error: Process completed with exit code 1.
+```
+
+```shell
+Warning: Permanently added 'codeup.aliyun.com' (RSA) to the list of known hosts.
+remote: 权限被拒绝: branch:refs/pull/1/merge is illegal
+To codeup.aliyun.com:60b0bc44b8301d20d58b51c2/HeavenZhi/test.git
+ ! [remote rejected] main -> main (pre-receive hook declined)
+ ! [remote rejected] refs/pull/1/head -> refs/pull/1/head (pre-receive hook declined)
+ ! [remote rejected] refs/pull/1/merge -> refs/pull/1/merge (pre-receive hook declined)
+error: failed to push some refs to 'codeup.aliyun.com:60b0bc44b8301d20d58b51c2/HeavenZhi/test.git'
+Error: Process completed with exit code 1.
+```
+
+```shell
+Warning: Permanently added 'e.coding.net' (RSA) to the list of known hosts.
+remote: [err=02] Push to refs/pull dir is rejected!        
+remote: CODING 禁止 Push 到 refs/pull ref 目录        
+remote: error: hook declined to update refs/pull/1/head        
+remote: [err=02] Push to refs/pull dir is rejected!        
+remote: CODING 禁止 Push 到 refs/pull ref 目录        
+remote: error: hook declined to update refs/pull/1/merge        
+To e.coding.net:an-yu/HeavenZhi/test.git
+   c8ded6b..3db261c  main -> main
+ ! [remote rejected] refs/pull/1/head -> refs/pull/1/head (hook declined)
+ ! [remote rejected] refs/pull/1/merge -> refs/pull/1/merge (hook declined)
+error: failed to push some refs to 'e.coding.net:an-yu/HeavenZhi/test.git'
+Error: Process completed with exit code 1.
+```
+
+I am not sure about the reason for this error. After many tests, it is found that the condition for the recurrence of this error is:
+
+> When **Pull Requests** exist in **GitHub's Git Repository**, Pushing the **Git repository** to **gitee.com**, **codeup.aliyun.com**, **coding.net** platforms will trigger those platforms to return the error.
+>
+> This is true even if the optional parameter `is_force` is configured to `true` when calling **Push Mirror Git Repository**.
+> 
+> PS:
+> These platforms will be triggered to return this error, regardless of whether the **Pull Requests** are open or closed.
+
+I have consulted the staff of relevant platforms on this issue, and will update as soon as possible after receiving feedback.
+
+Information that might be helpful:
+
+- [Stackoverflow.com - ! [remote rejected] errors after mirroring a git repository](https://stackoverflow.com/questions/34265266/remote-rejected-errors-after-mirroring-a-git-repository)
+- [Dev.to - Copying a git repository properly](https://dev.to/noejon/copying-a-git-repository-properly-j67)
+- [Qiita - 対githubでも、git mirrorを上手にやる](https://qiita.com/takumiabe/items/639ae10025d086eb9ecb)
+- [Github.com - BFG Repo-Cleaner - Update documentation to explain how to mirror-push up to a GitHub repo with pull-requests #16](https://github.com/rtyley/bfg-repo-cleaner/issues/16)
+- [Github.com - BFG Repo-Cleaner - Git push has some rejections #36](https://github.com/rtyley/bfg-repo-cleaner/issues/36)
 
 ##### GitCode
 
