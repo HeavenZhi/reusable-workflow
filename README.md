@@ -13,14 +13,12 @@
 - [GitHub](https://github.com/)
 - [GitLab](https://gitlab.com/)
 - [Bitbucket](https://bitbucket.org/)
-- [Gitee](https://gitee.com/)[1]
-- [Codeup](https://codeup.aliyun.com/)[1]
-- [Coding](https://coding.net/)[1]
+- [Codeup](https://codeup.aliyun.com/)
+- [Coding](https://coding.net/)
+- [Gitee](https://gitee.com/)
 - [JihuLab](https://jihulab.com/)
 - [GitCode](https://gitcode.net/)
 - [GitLink](https://www.gitlink.org.cn/)
-
-[1]: 当 **GitHub's Git Repository** 中存在 **Pull Requests** 时，该代码托管平台会禁止用户向其仓库中推送镜像(正在咨询相关平台的工作人员寻求解决办法)。
 
 ### 如何使用
 
@@ -59,24 +57,33 @@ jobs:
     # -----------------------------在此之上的代码为：调用该 GitHub Workflow 的核心步骤（不能更改）-----------------------------
     # --------------------------------------在此以下的代码可以根据需求任意更改--------------------------------------
 
-    # -----------------------------------------------------可选参数-----------------------------------------------------
-      # is_force 为 boolean 类型的可选参数（可不设置），不设置时默认为：false
+    # -----------------------------------------------------可选参数---------------------------------------------------------------
+      # is_clone_bare 为 boolean 类型的可选参数（可不设置），不设置时默认为：false（即使用 git clone --mirror 的方式，从源 Git 仓库克隆镜像）
+      # 该参数决定是否使用 git clone --bare 的方式，从源 Git 仓库克隆镜像
+      # 若在代码托管平台的源 Git 仓库中包含 Pull Requests，且目标 Git 仓库的代码托管平台是 Codeup、Coding 、Gitee 时，请将 is_clone_bare 设置为 true
+      # ！！！在此感谢由 阿里云 && Codeup 的工作人员给出的解决方案！！！
+      is_clone_bare: false
+
+      # is_push_force 为 boolean 类型的可选参数（可不设置），不设置时默认为：false
       # 该参数决定是否使用 force 的方式，向目标 Git 仓库推送镜像
       # ！！！强制推送具有高风险性，会强制覆盖目标 Git 仓库的原数据！！！
-      is_force: false
+      is_push_force: false
 ```
 
 可选参数：可以不设置
 
-- `is_force`: `boolean`类型的可选参数，默认为：`false`。
-  - 该参数决定是否使用 **force** 的方式，向**目标 Git 仓库**推送镜像。
+- `is_clone_bare`: `boolean`类型的可选参数，默认为：`false`。
+  - 该参数决定是否使用 **--bare** 的方式，从**源 Git 仓库**克隆镜像。
+  - 若在代码托管平台的**源 Git 仓库**中包含 **Pull Requests**，且目标 Git 仓库的代码托管平台是 **Codeup**、**Coding** 、**Gitee**时，请将`is_clone_bare`设置为`true`
+- `is_push_force`: `boolean`类型的可选参数，默认为：`false`。
+  - 该参数决定是否使用 **--force** 的方式，向**目标 Git 仓库**推送镜像。
   - ！！！强制推送具有**高风险性**，会**强制覆盖目标 Git 仓库**的原数据！！！
 
 ### 注意事项
 
-#### 使用可选参数: is_force 时
+#### 使用可选参数: is_push_force 时
 
-当**源 Git 仓库**使用可选参数 `is_force` 向代码托管平台的**目标 Git 仓库**强制推送时，可能会出现报错的情况，下面列出了常见报错的处理方式。
+当**源 Git 仓库**使用可选参数 `is_push_force` 向代码托管平台的**目标 Git 仓库**强制推送时，可能会出现报错的情况，下面列出了常见报错的处理方式。
 
 ##### GitLab、Jihu
 
@@ -95,18 +102,7 @@ Error: Process completed with exit code 1.
 
 ![GitLab_config_force](https://cdn.jsdelivr.net/gh/HeavenZhi/reusable-workflow@main/image/GitLab_config_force.gif)
 
-##### Gitee、Codeup、Coding（暂时无解）
-
-```shell
-Warning: Permanently added 'gitee.com' (ED25519) to the list of known hosts.
-remote: Powered by GITEE.COM [GNK-6.4]        
-To gitee.com:HeavenZhi/test.git
-   c8ded6b..3db261c  main -> main
- ! [remote rejected] refs/pull/1/head -> refs/pull/1/head (deny updating a hidden ref)
- ! [remote rejected] refs/pull/1/merge -> refs/pull/1/merge (deny updating a hidden ref)
-error: failed to push some refs to 'gitee.com:HeavenZhi/test.git'
-Error: Process completed with exit code 1.
-```
+##### Codeup、Coding、Gitee
 
 ```shell
 Warning: Permanently added 'codeup.aliyun.com' (RSA) to the list of known hosts.
@@ -135,24 +131,39 @@ error: failed to push some refs to 'e.coding.net:an-yu/HeavenZhi/test.git'
 Error: Process completed with exit code 1.
 ```
 
-出现这个报错的原因我不太确定，经过多次测试发现，该报错的复现条件是：
+```shell
+Warning: Permanently added 'gitee.com' (ED25519) to the list of known hosts.
+remote: Powered by GITEE.COM [GNK-6.4]        
+To gitee.com:HeavenZhi/test.git
+   c8ded6b..3db261c  main -> main
+ ! [remote rejected] refs/pull/1/head -> refs/pull/1/head (deny updating a hidden ref)
+ ! [remote rejected] refs/pull/1/merge -> refs/pull/1/merge (deny updating a hidden ref)
+error: failed to push some refs to 'gitee.com:HeavenZhi/test.git'
+Error: Process completed with exit code 1.
+```
 
-> 在 **GitHub's Git Repository** 中存在 **Pull Requests** 时，将该 **Git 仓库**推送至 **gitee.com**、**codeup.aliyun.com**、**coding.net** 平台的 **Git 仓库**就会触发这些平台返回该报错。
+该报错的复现条件是：
+
+> 当调用本 **GitHub Workflow** 配置的`${{ vars.SOURCE_REPO }}`指向的代码托管平台中的**源 Git仓库**中存在 **Pull Requests**时，克隆该 **Git 仓库**的镜像，并推送至 **Codeup**、**Coding**、**Gitee** 平台的 **Git 仓库**中就会触发这些平台返回该报错。
 >
-> 即便在调用 **Push Mirror Git Repository** 时将可选参数`is_force`配置为`true`仍然会这样。
+> 即便在调用 **Push Mirror Git Repository** 时将可选参数`is_push_force`配置为`true`仍然会这样。
 > 
 > PS:
 > 无论这个 **Pull Requests** 是开启状态还是关闭状态，都会触发这些平台返回这个报错。
 
-我已经就这个问题去咨询相关平台的工作人员了，得到反馈会尽快更新。
+出现这个报错的原因是：
 
-可以查看以下资料了解可能的报错原因：
+> 在代码托管平台的**源 Git 仓库**创建 **Pull Requests** 时，会自动创建一个该代码托管平台能识别的特殊引用，而这个特殊引用在其他代码托管平台无法识别。
+> 
+> 当包含这个特殊引用的 **Git仓库**被推送去其他代码托管平台时，有些代码托管平台会认为这个无法识别的特殊引用是非法引用，进而拒绝接受包含非法引用的镜像进行推送操作。
 
-- [Stackoverflow.com - ! [remote rejected] errors after mirroring a git repository](https://stackoverflow.com/questions/34265266/remote-rejected-errors-after-mirroring-a-git-repository)
-- [Dev.to - Copying a git repository properly](https://dev.to/noejon/copying-a-git-repository-properly-j67)
-- [Qiita - 対githubでも、git mirrorを上手にやる](https://qiita.com/takumiabe/items/639ae10025d086eb9ecb)
-- [Github.com - BFG Repo-Cleaner - Update documentation to explain how to mirror-push up to a GitHub repo with pull-requests #16](https://github.com/rtyley/bfg-repo-cleaner/issues/16)
-- [Github.com - BFG Repo-Cleaner - Git push has some rejections #36](https://github.com/rtyley/bfg-repo-cleaner/issues/36)
+由<b style="color:red;">阿里云 && Codeup 的大佬</b>说明了出现报错的原因，并给出了解决方案。该解决方案也可以解决**Coding**和**Gitee**的相同问题。
+
+![Aliyun_resolve](https://cdn.jsdelivr.net/gh/HeavenZhi/reusable-workflow@main/image/Aliyun_resolve.png)
+
+基于<b style="color:red;">阿里云 && Codeup 的大佬</b>给出的解决方案，现在只需要在调用本 **GitHub Workflow** 时将可选参数`is_clone_bare`设置为`true`即可。
+
+<b style="color:red;">！！！在此感谢阿里云 && Codeup 提供的免费技术支持！！！</b>
 
 ##### GitCode
 
@@ -171,7 +182,7 @@ Error: Process completed with exit code 1.
 1. **源 Git 仓库**的默认分支与`gitcode.net`等平台的**目标 Git 仓库**的默认分支不同
 2. `gitcode.net`等平台的 **Git 仓库**不允许删除默认分支
 
-要使用`-- force`向`gitcode.net`的 **Git 仓库**中推送镜像的话，操作会稍微复杂一点，需要进行三步设置。
+要使用`--force`向`gitcode.net`的 **Git 仓库**中推送镜像的话，操作会稍微复杂一点，需要进行三步设置。
 
 1. 在`gitcode.net`的 **Git 仓库**中新建与**源 Git 仓库**的默认分支相同名字的分支：
    ![GitCode_added_main_branch](https://cdn.jsdelivr.net/gh/HeavenZhi/reusable-workflow@main/image/GitCode_added_main_branch.gif)

@@ -13,14 +13,12 @@ After practical testing this **GitHub Workflow** can push an mirror to the follo
 - [GitHub](https://github.com/)
 - [GitLab](https://gitlab.com/)
 - [Bitbucket](https://bitbucket.org/)
-- [Gitee](https://gitee.com/)[1]
-- [Codeup](https://codeup.aliyun.com/)[1]
-- [Coding](https://coding.net/)[1]
+- [Codeup](https://codeup.aliyun.com/)
+- [Coding](https://coding.net/)
+- [Gitee](https://gitee.com/)
 - [JihuLab](https://jihulab.com/)
 - [GitCode](https://gitcode.net/)
 - [GitLink](https://www.gitlink.org.cn/)
-
-[1]: When **Pull Requests** exist in **GitHub's Git Repository**, the code hosting platform prohibits users from pushing mirror to their repository (we are consulting with the relevant platform staff for a workaround).
 
 ### How to use
 
@@ -60,23 +58,32 @@ jobs:
     # --------------------------------------The code below can be changed as needed--------------------------------------
 
     # -----------------------------------------------------Optional parameter-----------------------------------------------------
-      # is_force is an optional parameter of the boolean type(This parameter is not required). If this parameter is not set, the default value is false.
+      # is_clone_bare is an optional parameter of the boolean type(This parameter is not required). If this parameter is not set, the default value is false(This means using git clone --mirror to clone a mirror from the source Git repository).
+      # This parameter determines whether to use git clone --bare to clone an image from the source Git repository.
+      # If the source Git repository of the code hosting platform contains Pull Requests, and the target Git repository is Codeup, Coding, or Gitee, set is_clone_bare to true.
+      # !!!Thank you for the solution given by the staff of Aliyun & Codeup!!!
+      is_clone_bare: false
+
+      # is_push_force is an optional parameter of the boolean type(This parameter is not required). If this parameter is not set, the default value is false.
       # This parameter determines whether to push an mirror to the target Git repository by force.
       # !!!Forced push is risky and will overwrite the raw data of the target Git repository!!!
-      is_force: false
+      is_push_force: false
 ```
 
 Optional: Parameters that can be left unset
 
-- `is_force`: An optional parameter of the `boolean` type, the default value is `false`.
-  - This parameter determines whether to push an mirror to **Target Git Repository** by **force**.
+- `is_clone_bare`: An optional parameter of the `boolean` type, the default value is `false`.
+  - This parameter determines whether to use **--bare** to clone an image from the **Source Git Repository**.
+  - If the **Source Git Repository** of the code hosting platform contains **Pull Requests**, and the target Git repository is **Codeup**, **Coding**, or **Gitee**, set `is_clone_bare` to `true`.
+- `is_push_force`: An optional parameter of the `boolean` type, the default value is `false`.
+  - This parameter determines whether to push an mirror to **Target Git Repository** by **--force**.
   - !!Forced push is risky and **will overwrite the raw data of Target Git Repository**!!
 
 ### notice
 
-#### When the optional parameter: is_force is used
+#### When the optional parameter: is_push_force is used
 
-When the **Source Git Repository** uses the optional parameter `is_force` to push the **Target Git Repository** of the code hosting platform such as `gitlab.com`, `jihu.com`, `gitcode.net`, `gitlink.org.cn`, Errors may occur. The following is a list of common error handling methods.
+When the **Source Git Repository** uses the optional parameter `is_push_force` to push the **Target Git Repository** of the code hosting platform such as `gitlab.com`, `jihu.com`, `gitcode.net`, `gitlink.org.cn`, Errors may occur. The following is a list of common error handling methods.
 
 ##### GitLab、Jihu
 
@@ -95,18 +102,7 @@ To solve this problem is also very simple, allow the **Git Repository** of platf
 
 ![GitLab_config_force](https://cdn.jsdelivr.net/gh/HeavenZhi/reusable-workflow@main/image/GitLab_config_force.gif)
 
-##### Gitee、Codeup、Coding（暂时无解）
-
-```shell
-Warning: Permanently added 'gitee.com' (ED25519) to the list of known hosts.
-remote: Powered by GITEE.COM [GNK-6.4]        
-To gitee.com:HeavenZhi/test.git
-   c8ded6b..3db261c  main -> main
- ! [remote rejected] refs/pull/1/head -> refs/pull/1/head (deny updating a hidden ref)
- ! [remote rejected] refs/pull/1/merge -> refs/pull/1/merge (deny updating a hidden ref)
-error: failed to push some refs to 'gitee.com:HeavenZhi/test.git'
-Error: Process completed with exit code 1.
-```
+##### Codeup、Coding、Gitee
 
 ```shell
 Warning: Permanently added 'codeup.aliyun.com' (RSA) to the list of known hosts.
@@ -135,24 +131,39 @@ error: failed to push some refs to 'e.coding.net:an-yu/HeavenZhi/test.git'
 Error: Process completed with exit code 1.
 ```
 
-I am not sure about the reason for this error. After many tests, it is found that the condition for the recurrence of this error is:
+```shell
+Warning: Permanently added 'gitee.com' (ED25519) to the list of known hosts.
+remote: Powered by GITEE.COM [GNK-6.4]        
+To gitee.com:HeavenZhi/test.git
+   c8ded6b..3db261c  main -> main
+ ! [remote rejected] refs/pull/1/head -> refs/pull/1/head (deny updating a hidden ref)
+ ! [remote rejected] refs/pull/1/merge -> refs/pull/1/merge (deny updating a hidden ref)
+error: failed to push some refs to 'gitee.com:HeavenZhi/test.git'
+Error: Process completed with exit code 1.
+```
 
-> When **Pull Requests** exist in **GitHub's Git Repository**, Pushing the **Git repository** to **gitee.com**, **codeup.aliyun.com**, **coding.net** platforms will trigger those platforms to return the error.
+The conditions for the recurrence of the error are:
+
+> When calling the `${vars. SOURCE-REPO}` configured by this **GitHub Workflow** to point to exist  a **Pull Requests** in the **Source Git Repository** of the code hosting platform, cloning the mirror of the **Git Repository** and pushing it to the **Codeup**, **Coding**, and **Gitee** platforms will trigger these platforms to return this error.
 >
-> This is true even if the optional parameter `is_force` is configured to `true` when calling **Push Mirror Git Repository**.
+> This is true even if the optional parameter `is_push_force` is configured to `true` when calling **Push Mirror Git Repository**.
 > 
 > PS:
 > These platforms will be triggered to return this error, regardless of whether the **Pull Requests** are open or closed.
 
-I have consulted the staff of relevant platforms on this issue, and will update as soon as possible after receiving feedback.
+The reason for this error is:
 
-Information that might be helpful:
+> When creating **Pull Requests** in the **Source Git Repository** of the code hosting platform, a special reference that this code hosting platform can recognize will be automatically created, which is not recognized by other code hosting platforms.
+> 
+> When the **Git Repository** containing this particular reference is pushed to other code hosting platforms, some code hosting platforms will consider this unrecognized special reference to be an illegal reference and refuse to accept the mirror containing the illegal reference for push operation.
 
-- [Stackoverflow.com - ! [remote rejected] errors after mirroring a git repository](https://stackoverflow.com/questions/34265266/remote-rejected-errors-after-mirroring-a-git-repository)
-- [Dev.to - Copying a git repository properly](https://dev.to/noejon/copying-a-git-repository-properly-j67)
-- [Qiita - 対githubでも、git mirrorを上手にやる](https://qiita.com/takumiabe/items/639ae10025d086eb9ecb)
-- [Github.com - BFG Repo-Cleaner - Update documentation to explain how to mirror-push up to a GitHub repo with pull-requests #16](https://github.com/rtyley/bfg-repo-cleaner/issues/16)
-- [Github.com - BFG Repo-Cleaner - Git push has some rejections #36](https://github.com/rtyley/bfg-repo-cleaner/issues/36)
+The big guy of <b style="color:red;">Alibaba Cloud & Codeup</b> explained the reason for the error and gave the solution. The solution can also solve the same problem of **Coding** and **Gitee**.
+
+![Aliyun_resolve](https://cdn.jsdelivr.net/gh/HeavenZhi/reusable-workflow@main/image/Aliyun_resolve.png)
+
+Based on the solution given by the big guy of <b style="color:red;">Alibaba Cloud & Codeup</b>, now only need to set the optional parameter `is_clone_bare` to `true` when calling this **GitHub Workflow**.
+
+<b style="color:red;">!!!Thank you for the free technical support provided by Ali Cloud & Codeup!!!</b>
 
 ##### GitCode
 
