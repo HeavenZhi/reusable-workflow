@@ -85,7 +85,7 @@ jobs:
           if [ ${is_clone_bare} == "true" ]; then
             clone_way="--bare"
           fi
-          echo "读取可选参数 is_clone_bare，克隆时将使用：git clone ${clone_way} ${source_repo}"
+          # echo "读取可选参数 is_clone_bare，克隆时将使用：git clone ${clone_way} ${source_repo}"
 
           # 克隆完整的 Git 镜像仓库到本地(当前环境的虚拟机)
           #   若使用 "git clone --mirror" 的话会完整 clone 整个仓库，此时若 clone 的 Git 仓库有 Pull Requests，目标代码托管平台有可能会无法识别源代码托管平台的 Pull Requests 创建的引用，进而认为该引用是非法引用，禁止向其 Git 仓库中推送镜像。
@@ -105,7 +105,7 @@ jobs:
           if [ ${is_push_force} == "true" ]; then
             push_way="--force"
           fi
-          echo "读取可选参数 is_push_force，推送时将使用：git push ${push_way} --mirror"
+          # echo "读取可选参数 is_push_force，推送时将使用：git push ${push_way} --mirror"
 
           # 循环向其他 Git 仓库推送
           for value in ${destination_repo_LIST[@]}
