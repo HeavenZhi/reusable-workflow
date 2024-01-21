@@ -86,6 +86,8 @@ jobs:
             clone_way="--bare"
           fi
 
+          echo "${clone_way} ---------------------------------------显示"
+
           # 克隆完整的 Git 镜像仓库到本地(当前环境的虚拟机)
           #   若使用 "git clone --mirror" 的话会完整 clone 整个仓库，此时若 clone 的 Git 仓库有 Pull Requests，目标代码托管平台有可能会无法识别源代码托管平台的 Pull Requests 创建的引用，进而认为该引用是非法引用，禁止向其 Git 仓库中推送镜像。
           #   为了避免出现其他代码托管平台(目前已知: Gitee、Codeup、Coding)无法识别特殊引用问题
@@ -105,13 +107,15 @@ jobs:
             push_way="--force"
           fi
 
+          echo "${push_way} ---------------------------------------显示"
+
           # 循环向其他 Git 仓库推送
           for value in ${destination_repo_LIST[@]}
           do
           # 修改远程 Git 仓库地址
           git remote set-url --push origin "${value}"
           # 向远程 Git 仓库推送镜像
-          git push --mirror
+          git push ${push_way}" --mirror
           done
 
       # 删除操作文件
