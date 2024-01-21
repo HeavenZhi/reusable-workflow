@@ -81,6 +81,7 @@ jobs:
 
           # 用于储存 clone 方式的参数
           clone_way=""
+          echo "读到的is_clone_bare: ${is_clone_bare}"
           # 判断是否使用 clone --bare 源仓库
           if [ ${is_clone_bare} ]; then
             echo "进入了 --bare"
@@ -104,10 +105,13 @@ jobs:
 
           # 用于储存 push 方式的参数
           push_way=""
+          echo "is_push_force: ${is_push_force}"
           # 判断是否使用 push --force 目标仓库
           if [ ${is_push_force} ]; then
+            echo "进入了 --force"
             push_way="--force"
           else
+            echo "进入了 --noforcce"
             push_way=""
           fi
 
