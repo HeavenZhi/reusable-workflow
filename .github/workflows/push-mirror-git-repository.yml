@@ -108,12 +108,11 @@ jobs:
           # 循环向其他 Git 仓库推送
           for value in ${destination_repo_LIST[@]}
           do
-          echo "推送的地址： ${value} -----------------------------显示"
           # 修改远程 Git 仓库地址
           git remote set-url --push origin "${value}"
           echo `git remote -v` "-----------------------------显示"
           # 向远程 Git 仓库推送镜像
-          git push "${push_way}" --mirror
+          echo git push "${push_way}" --mirror "-----------------------------显示"
           done
 
       # 删除操作文件
