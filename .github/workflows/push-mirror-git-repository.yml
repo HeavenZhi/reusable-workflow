@@ -112,7 +112,7 @@ jobs:
           git remote set-url --push origin "${value}"
           echo `git remote -v` "-----------------------------显示"
           # 向远程 Git 仓库推送镜像
-          echo `git push "${push_way}" --mirror` "-----------------------------显示"
+          git push "${push_way}" --mirror origin
           done
 
       # 删除操作文件
