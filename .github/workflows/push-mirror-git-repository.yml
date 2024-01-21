@@ -94,7 +94,7 @@ jobs:
           #   阿里云的大佬给出的解决办法：此处应该使用 "git clone --bare"
           git clone --mirror "${source_repo}"
 
-          echo `pwd` "----显示"
+          echo `ls` "----显示"
 
           # 进入镜像 Git 仓库
           cd `basename "${source_repo}"`
