@@ -80,12 +80,10 @@ jobs:
           # 克隆完整的 Git 镜像仓库到本地(当前环境的虚拟机)，并将镜像推送至指定的其他 Git 仓库
 
           # 用于储存 clone 方式的参数
-          clone_way=""
+          clone_way="--mirror"
           # 判断是否使用 clone --bare 源仓库
           if [ "${is_clone_bare}" == "true" ]; then
             clone_way="--bare"
-          else
-            clone_way="--mirror"
           fi
 
           # 克隆完整的 Git 镜像仓库到本地(当前环境的虚拟机)
@@ -97,8 +95,6 @@ jobs:
           # 进入镜像 Git 仓库
           cd `basename "${source_repo}"`
 
-          echo `pwd` "------------显示"
-
           # 将Git其他 Git 仓库地址，根据分隔符'|'分割成数组
           destination_repo_LIST=(${destination_repo//|/ })
 
@@ -107,18 +103,15 @@ jobs:
           # 判断是否使用 push --force 目标仓库
           if [ "${is_push_force}" == "true" ]; then
             push_way="--force"
-          else
-            push_way=""
           fi
-
-          echo "推送循环前"
 
           # 循环向其他 Git 仓库推送
           for value in ${destination_repo_LIST[@]}
           do
-          echo "推送的地址： ${value}"
+          echo "推送的地址： ${value} -----------------------------显示"
           # 修改远程 Git 仓库地址
           git remote set-url --push origin "${value}"
+          echo `git remote -v` "-----------------------------显示"
           # 向远程 Git 仓库推送镜像
           git push "${push_way}" --mirror
           done
