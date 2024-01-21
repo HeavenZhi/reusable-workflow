@@ -111,7 +111,7 @@ jobs:
           # 修改远程 Git 仓库地址
           git remote set-url origin "${value}"
           # 向远程 Git 仓库推送镜像
-          git push --mirror
+          git push --mirror "${push_way}"
           done
 
       # 删除操作文件
