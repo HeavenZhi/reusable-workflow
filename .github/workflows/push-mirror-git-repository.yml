@@ -99,7 +99,7 @@ jobs:
           destination_repo_LIST=(${destination_repo//|/ })
 
           # 用于储存 push 方式的参数
-          push_way=" "
+          push_way=""
           # 判断是否使用 push --force 目标仓库
           if [ "${is_push_force}" == "true" ]; then
             push_way="--force"
@@ -109,9 +109,9 @@ jobs:
           for value in ${destination_repo_LIST[@]}
           do
           # 修改远程 Git 仓库地址
-          git remote set-url origin "${value}"
+          git remote set-url --push origin "${value}"
           # 向远程 Git 仓库推送镜像
-          git push --mirror "${push_way}"
+          git push --mirror
           done
 
       # 删除操作文件
