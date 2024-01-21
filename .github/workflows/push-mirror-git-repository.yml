@@ -110,9 +110,8 @@ jobs:
           do
           # 修改远程 Git 仓库地址
           git remote set-url origin "${value}"
-          echo `git remote -v` "-----------------------------显示"
           # 向远程 Git 仓库推送镜像
-          git push "${push_way}" --mirror
+          git push --mirror
           done
 
       # 删除操作文件
