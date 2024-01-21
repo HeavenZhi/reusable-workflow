@@ -73,7 +73,10 @@ jobs:
           # 克隆完整的 Git 镜像仓库到本地(当前环境的虚拟机)，并将镜像推送至指定的其他 Git 仓库
 
           # 克隆完整的 Git 镜像仓库到本地(当前环境的虚拟机)
-          git clone --mirror "${source_repo}"
+
+          # 为了避免出现其他代码托管平台(目前已知：Gitee、Codeup、Coding)无法识别特殊引用问题
+          # 阿里云的大佬给出的解决办法：此处应该使用 "git clone --base"，使用 "git clone --mirror" 的话会完整 clone 整个仓库，包含了有些代码托管平台无法识别的特殊引用(其服务器会被认为是非法引用，而拒绝推送)
+          git clone --base "${source_repo}"
 
           # 进入镜像 Git 仓库
           cd `basename "${source_repo}"`
