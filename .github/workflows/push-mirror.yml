@@ -26,7 +26,7 @@ jobs:
       # 该参数决定是否使用 git clone --bare 的方式，从源 Git 仓库克隆镜像
       # 若源 Git 仓库的代码托管平台包含 Pull Requests，且目标 Git 仓库的代码托管平台是 Codeup、Gitee、Coding 时，请将 is_clone_bare 设置为 true
       # ！！！在此感谢由 阿里云 && Codeup 的工作人员给出的解决方案！！！
-      is_clone_bare: false
+      is_clone_bare: true
 
       # is_push_force 为 boolean 类型的可选参数（可不设置），不设置时默认为：false
       # 该参数决定是否使用 force 的方式，向目标 Git 仓库推送镜像
