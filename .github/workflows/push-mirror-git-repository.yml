@@ -95,7 +95,7 @@ jobs:
           git clone ${clone_way} ${source_repo}
 
           # 进入镜像 Git 仓库
-          cd `basename "${source_repo}"`
+          cd `basename ${source_repo}`
 
           # 将Git其他 Git 仓库地址，根据分隔符'|'分割成数组
           destination_repo_LIST=(${destination_repo//|/ })
