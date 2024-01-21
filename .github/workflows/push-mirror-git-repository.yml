@@ -82,7 +82,7 @@ jobs:
           # 用于储存 clone 方式的参数
           clone_way=""
           # 判断是否使用 clone --bare 源仓库
-          if [ "${is_clone_bare}" == true ]; then
+          if [ "${is_clone_bare}"==true ]; then
             clone_way="--bare"
           else
             clone_way="--mirror"
@@ -103,7 +103,7 @@ jobs:
           # 用于储存 push 方式的参数
           push_way=""
           # 判断是否使用 push --force 目标仓库
-          if [ "${is_push_force}" == true ]; then
+          if [ "${is_push_force}"==true ]; then
             push_way="--force"
           else
             push_way=""
