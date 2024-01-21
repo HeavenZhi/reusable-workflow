@@ -83,8 +83,10 @@ jobs:
           clone_way=""
           # 判断是否使用 clone --bare 源仓库
           if [ ${is_clone_bare} ]; then
+            echo "进入了 --bare"
             clone_way="--bare"
           else
+            echo "进入了 --mirror"
             clone_way="--mirror"
           fi
 
