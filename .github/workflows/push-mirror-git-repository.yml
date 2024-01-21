@@ -92,7 +92,7 @@ jobs:
           #   若使用 "git clone --mirror" 的话会完整 clone 整个仓库，此时若 clone 的 Git 仓库有 Pull Requests，目标代码托管平台有可能会无法识别源代码托管平台的 Pull Requests 创建的引用，进而认为该引用是非法引用，禁止向其 Git 仓库中推送镜像。
           #   为了避免出现其他代码托管平台(目前已知: Gitee、Codeup、Coding)无法识别特殊引用问题
           #   阿里云的大佬给出的解决办法：此处应该使用 "git clone --bare"
-          git clone "${clone_way}" "${source_repo}"
+          git clone --mirror "${source_repo}"
 
           # 进入镜像 Git 仓库
           cd `basename "${source_repo}"`
