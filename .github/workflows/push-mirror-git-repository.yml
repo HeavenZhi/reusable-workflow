@@ -59,7 +59,7 @@ jobs:
           mkdir -p ~/.ssh
 
           # 创建 SSH 私钥文件
-          echo ${ssh_private_key} > ~/.ssh/id_rsa
+          echo "${ssh_private_key}" > ~/.ssh/id_rsa
 
           # 修改 SSH 私钥文件的权限（只有本人能读写）
           chmod 600 ~/.ssh/id_rsa
