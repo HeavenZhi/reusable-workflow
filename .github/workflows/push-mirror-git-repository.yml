@@ -109,10 +109,10 @@ jobs:
           for value in ${destination_repo_LIST[@]}
           do
           # 修改远程 Git 仓库地址
-          git remote set-url --push origin "${value}"
+          git remote set-url origin "${value}"
           echo `git remote -v` "-----------------------------显示"
           # 向远程 Git 仓库推送镜像
-          git push "${push_way}" --mirror origin
+          git push "${push_way}" --mirror
           done
 
       # 删除操作文件
