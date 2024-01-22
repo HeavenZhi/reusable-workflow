@@ -136,13 +136,13 @@ The reason for this error is:
 > 
 > When the **Git Repository** containing this particular reference is pushed to other code hosting platforms, some code hosting platforms will consider this unrecognized special reference to be an illegal reference and refuse to accept the mirror containing the illegal reference for push operation.
 
-The big guy of <b style="color:red;">Alibaba Cloud & Codeup</b> explained the reason for the error and gave the solution. The solution can also solve the same problem of **Coding** and **Gitee**.
+The big guy of <b style="color:red">Alibaba Cloud & Codeup</b> explained the reason for the error and gave the solution. The solution can also solve the same problem of **Coding** and **Gitee**.
 
 ![Aliyun_resolve](https://cdn.jsdelivr.net/gh/HeavenZhi/reusable-workflow@main/image/Aliyun_resolve.png)
 
-Based on the solution given by the big guy of <b style="color:red;">Alibaba Cloud & Codeup</b>, now only need to set the optional parameter `is_clone_bare` to `true` when calling this **GitHub Workflow**.
+Based on the solution given by the big guy of <b style="color:red">Alibaba Cloud & Codeup</b>, now only need to set the optional parameter `is_clone_bare` to `true` when calling this **GitHub Workflow**.
 
-<b style="color:red;">!!!Thank you for the free technical support provided by Ali Cloud & Codeup!!!</b>
+<b style="color:red">!!!Thank you for the free technical support provided by Ali Cloud & Codeup!!!</b>
 
 #### When the optional parameter: is_push_force is used
 

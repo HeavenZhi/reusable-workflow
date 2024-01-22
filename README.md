@@ -136,13 +136,13 @@ Error: Process completed with exit code 1.
 > 
 > 当包含这个特殊引用的 **Git仓库**被推送去其他代码托管平台时，有些代码托管平台会认为这个无法识别的特殊引用是非法引用，进而拒绝接受包含非法引用的镜像进行推送操作。
 
-由<b style="color:red;">阿里云 && Codeup 的大佬</b>说明了出现报错的原因，并给出了解决方案。该解决方案也可以解决**Coding**和**Gitee**的相同问题。
+由<b style="color:red">阿里云 && Codeup 的大佬</b>说明了出现报错的原因，并给出了解决方案。该解决方案也可以解决**Coding**和**Gitee**的相同问题。
 
 ![Aliyun_resolve](https://cdn.jsdelivr.net/gh/HeavenZhi/reusable-workflow@main/image/Aliyun_resolve.png)
 
-基于<b style="color:red;">阿里云 && Codeup 的大佬</b>给出的解决方案，现在只需要在调用本 **GitHub Workflow** 时将可选参数`is_clone_bare`设置为`true`即可。
+基于<b style="color:red">阿里云 && Codeup 的大佬</b>给出的解决方案，现在只需要在调用本 **GitHub Workflow** 时将可选参数`is_clone_bare`设置为`true`即可。
 
-<b style="color:red;">！！！在此感谢阿里云 && Codeup 提供的免费技术支持！！！</b>
+<b style="color:red">！！！在此感谢阿里云 && Codeup 提供的免费技术支持！！！</b>
 
 #### 使用可选参数 is_push_force 时
 
