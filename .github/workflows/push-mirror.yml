@@ -31,4 +31,4 @@ jobs:
       # is_push_force 为 boolean 类型的可选参数（可不设置），不设置时默认为：false
       # 该参数决定是否使用 force 的方式，向目标 Git 仓库推送镜像
       # ！！！强制推送具有高风险性，会强制覆盖目标 Git 仓库的原数据！！！
-      is_push_force: false
+      is_push_force: true
