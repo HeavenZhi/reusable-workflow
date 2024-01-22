@@ -144,7 +144,7 @@ Based on the solution given by the big guy of <b style="color:red">Alibaba Cloud
 
 <b style="color:red">!!!Thank you for the free technical support provided by Ali Cloud & Codeup!!!</b>
 
-#### When the optional parameter: is_push_force is used
+#### When the optional parameter is_push_force is used
 
 When the **Source Git Repository** uses the optional parameter `is_push_force` to push the **Target Git Repository** of the code hosting platform such as `gitlab.com`, `jihu.com`, `gitcode.net`, `gitlink.org.cn`, Errors may occur. The following is a list of common error handling methods.
 
