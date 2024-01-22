@@ -79,30 +79,9 @@ jobs:
   - 该参数决定是否使用 **--force** 的方式，向**目标 Git 仓库**推送镜像。
   - ！！！强制推送具有**高风险性**，会**强制覆盖目标 Git 仓库**的原数据！！！
 
-### 注意事项
+### 常见报错
 
-#### 使用可选参数: is_push_force 时
-
-当**源 Git 仓库**使用可选参数 `is_push_force` 向代码托管平台的**目标 Git 仓库**强制推送时，可能会出现报错的情况，下面列出了常见报错的处理方式。
-
-##### GitLab、Jihu
-
-```shell
-Warning: Permanently added 'gitlab.com' (ED25519) to the list of known hosts.
-remote: GitLab: You are not allowed to force push code to a protected branch on this project.
-To gitlab.com:HeavenZhi/test.git
- ! [remote rejected] main -> main (pre-receive hook declined)
-error: failed to push some refs to 'gitlab.com:HeavenZhi/test.git'
-Error: Process completed with exit code 1.
-```
-
-出现这个报错的原因是`gitlab.com`、`jihu.com`等平台的 **Git 仓库**禁止对默认分支进行`--force`推送。
-
-要解决这个问题也很简单，允许`gitlab.com`、`jihu.com`等平台的 **Git 仓库**对默认分支进行 **force 推送**即可：
-
-![GitLab_config_force](https://cdn.jsdelivr.net/gh/HeavenZhi/reusable-workflow@main/image/GitLab_config_force.gif)
-
-##### Codeup、Coding、Gitee
+#### Codeup、Coding、Gitee
 
 ```shell
 Warning: Permanently added 'codeup.aliyun.com' (RSA) to the list of known hosts.
@@ -164,6 +143,27 @@ Error: Process completed with exit code 1.
 基于<b style="color:red;">阿里云 && Codeup 的大佬</b>给出的解决方案，现在只需要在调用本 **GitHub Workflow** 时将可选参数`is_clone_bare`设置为`true`即可。
 
 <b style="color:red;">！！！在此感谢阿里云 && Codeup 提供的免费技术支持！！！</b>
+
+#### 使用可选参数 is_push_force 时
+
+当**源 Git 仓库**使用可选参数 `is_push_force` 向代码托管平台的**目标 Git 仓库**强制推送时，可能会出现报错的情况，下面列出了常见报错的处理方式。
+
+##### GitLab、Jihu
+
+```shell
+Warning: Permanently added 'gitlab.com' (ED25519) to the list of known hosts.
+remote: GitLab: You are not allowed to force push code to a protected branch on this project.
+To gitlab.com:HeavenZhi/test.git
+ ! [remote rejected] main -> main (pre-receive hook declined)
+error: failed to push some refs to 'gitlab.com:HeavenZhi/test.git'
+Error: Process completed with exit code 1.
+```
+
+出现这个报错的原因是`gitlab.com`、`jihu.com`等平台的 **Git 仓库**禁止对默认分支进行`--force`推送。
+
+要解决这个问题也很简单，允许`gitlab.com`、`jihu.com`等平台的 **Git 仓库**对默认分支进行 **force 推送**即可：
+
+![GitLab_config_force](https://cdn.jsdelivr.net/gh/HeavenZhi/reusable-workflow@main/image/GitLab_config_force.gif)
 
 ##### GitCode
 

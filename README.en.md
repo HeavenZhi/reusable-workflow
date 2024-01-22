@@ -79,30 +79,9 @@ Optional: Parameters that can be left unset
   - This parameter determines whether to push an mirror to **Target Git Repository** by **--force**.
   - !!Forced push is risky and **will overwrite the raw data of Target Git Repository**!!
 
-### notice
+### Common error handling methods:
 
-#### When the optional parameter: is_push_force is used
-
-When the **Source Git Repository** uses the optional parameter `is_push_force` to push the **Target Git Repository** of the code hosting platform such as `gitlab.com`, `jihu.com`, `gitcode.net`, `gitlink.org.cn`, Errors may occur. The following is a list of common error handling methods.
-
-##### GitLab、Jihu
-
-```shell
-Warning: Permanently added 'gitlab.com' (ED25519) to the list of known hosts.
-remote: GitLab: You are not allowed to force push code to a protected branch on this project.
-To gitlab.com:HeavenZhi/test.git
- ! [remote rejected] main -> main (pre-receive hook declined)
-error: failed to push some refs to 'gitlab.com:HeavenZhi/test.git'
-Error: Process completed with exit code 1.
-```
-
-The reason for this error is that **Git Repository** on platforms such as `gitlab.com`, `jihu.com`, etc. prohibit `--force` push to the default branch.
-
-To solve this problem is also very simple, allow the **Git Repository** of platforms such as `gitlab.com`and `jihu.com` to **force push** against the default branch:
-
-![GitLab_config_force](https://cdn.jsdelivr.net/gh/HeavenZhi/reusable-workflow@main/image/GitLab_config_force.gif)
-
-##### Codeup、Coding、Gitee
+#### Codeup、Coding、Gitee
 
 ```shell
 Warning: Permanently added 'codeup.aliyun.com' (RSA) to the list of known hosts.
@@ -164,6 +143,27 @@ The big guy of <b style="color:red;">Alibaba Cloud & Codeup</b> explained the re
 Based on the solution given by the big guy of <b style="color:red;">Alibaba Cloud & Codeup</b>, now only need to set the optional parameter `is_clone_bare` to `true` when calling this **GitHub Workflow**.
 
 <b style="color:red;">!!!Thank you for the free technical support provided by Ali Cloud & Codeup!!!</b>
+
+#### When the optional parameter: is_push_force is used
+
+When the **Source Git Repository** uses the optional parameter `is_push_force` to push the **Target Git Repository** of the code hosting platform such as `gitlab.com`, `jihu.com`, `gitcode.net`, `gitlink.org.cn`, Errors may occur. The following is a list of common error handling methods.
+
+##### GitLab、Jihu
+
+```shell
+Warning: Permanently added 'gitlab.com' (ED25519) to the list of known hosts.
+remote: GitLab: You are not allowed to force push code to a protected branch on this project.
+To gitlab.com:HeavenZhi/test.git
+ ! [remote rejected] main -> main (pre-receive hook declined)
+error: failed to push some refs to 'gitlab.com:HeavenZhi/test.git'
+Error: Process completed with exit code 1.
+```
+
+The reason for this error is that **Git Repository** on platforms such as `gitlab.com`, `jihu.com`, etc. prohibit `--force` push to the default branch.
+
+To solve this problem is also very simple, allow the **Git Repository** of platforms such as `gitlab.com`and `jihu.com` to **force push** against the default branch:
+
+![GitLab_config_force](https://cdn.jsdelivr.net/gh/HeavenZhi/reusable-workflow@main/image/GitLab_config_force.gif)
 
 ##### GitCode
 
